@@ -6,11 +6,9 @@ const Papa = require('papaparse');
 const START = 'https://www.charities.gov.sg/_layouts/MCYSCPSearch/MCYSCPSearchCriteriaPage.aspx';
 const charityPerPage = 5;
 
-const inputFile = readFileSync('./data/input.csv',
-    {encoding: 'utf8'});
+const inputFile = readFileSync('./data/input.csv', {encoding: 'utf8'});
 
 let inputData = {};
-const skipTargetLinkElement = '#ctl00_PlaceHolderMain_spPager1 > a:nth-child(11)';
 
 Papa.parse(inputFile, {
     header: true,
@@ -23,16 +21,9 @@ function calculatePageCount(recordNumber) {
     return Math.ceil(recordNumber / charityPerPage);
 }
 
-function calculateSkipping(pageNo) {
+function getTargetLink(pageNo) {
     // charities.gov.sg has a very weird pagination system (1 => 16 => 26 => ...) ???
-    let pageSkip = Math.ceil(pageNo / 10) - 1;
-    let targetLinkElement = (pageNo !== 1 && Math.floor(pageNo % 10) !== 6 ? `#a${pageNo}` : '');
-
-    let pageSkipTargetLink = [];
-    for (let i = 1; i <= pageSkip; i++) {
-        pageSkipTargetLink.push(`#a${i}6`);
-    }
-    return {pageSkip: pageSkip, pageSkipTargetLink: pageSkipTargetLink, targetLink: targetLinkElement};
+    return (pageNo !== 1 ? `#a${pageNo}` : '');
 }
 
 async function scrapeCharityPage(categoryId, categoryElementSelector, pageNo) {
@@ -51,30 +42,21 @@ async function scrapeCharityPage(categoryId, categoryElementSelector, pageNo) {
             .wait('#ctl00_PlaceHolderMain_btnSearch')
             .click(categoryElementSelector)
             .click('#ctl00_PlaceHolderMain_btnSearch')
+            .wait('#a2')
+            .inject('js', 'extra/inject.js');
     } catch (e) {
         console.error(e);
     }
 
     try {
-        let pageSkippingData = calculateSkipping(pageNo);
-
-        // skip to the next 10th page
-        for (let i = 0; i < pageSkippingData['pageSkip']; i++) {
-            let skipTargetLink = pageSkippingData['pageSkipTargetLink'][i];
-            console.log(`skip to the next 10th page, target=${skipTargetLink}`);
-
-            await nightmare
-                .wait(skipTargetLink)
-                .click(skipTargetLink);
-        }
+        let targetLink = getTargetLink(pageNo);
 
         // click page link if it is not selected
-        console.log('click page link if it is not selected');
-
-        if (pageSkippingData['targetLink'] !== '') {
+        if (targetLink !== '') {
+            console.log('click page link if it is not selected');
             await nightmare
-                .wait(pageSkippingData['targetLink'])
-                .click(pageSkippingData['targetLink'])
+                .wait(targetLink)
+                .click(targetLink)
         }
 
         await nightmare
@@ -82,9 +64,9 @@ async function scrapeCharityPage(categoryId, categoryElementSelector, pageNo) {
             .evaluate(() => {
                 const elementPlaceholder = '#ctl00_PlaceHolderMain_lstSearchResults';
 
-                var data = [];
-                var index = 0;
-                for (var i = 0; i < 5; i++) {
+                let data = [];
+                let index = 0;
+                for (let i = 0; i < 5; i++) {
                     const elementNo = 'ctrl' + i;
                     const element = elementPlaceholder + '_' + elementNo;
                     data[index] = {

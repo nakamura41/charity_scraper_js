@@ -28,6 +28,7 @@ function getTargetLink(pageNo) {
 
 async function scrapeCharityPage(categoryId, categoryElementSelector, pageNo) {
     const nightmare = new Nightmare({show: false});
+    let result = {};
 
     console.log(`------------------------------------------------`);
     console.log(`Processing category ${categoryId} page ${pageNo}`);
@@ -59,7 +60,7 @@ async function scrapeCharityPage(categoryId, categoryElementSelector, pageNo) {
                 .click(targetLink)
         }
 
-        await nightmare
+        result = await nightmare
             .wait(4000)
             .evaluate(() => {
                 const elementPlaceholder = '#ctl00_PlaceHolderMain_lstSearchResults';
@@ -98,10 +99,11 @@ async function scrapeCharityPage(categoryId, categoryElementSelector, pageNo) {
             .then(data => {
                 const csvData = csvFormat(data.filter(i => i));
                 writeFileSync(`./data/output_${categoryId}_${pageNo}.csv`, csvData, {encoding: 'utf8'});
-
                 console.log(`Finish Processing category ${categoryId} page ${pageNo}`);
                 return data;
             });
+
+        return result;
     } catch (err) {
         console.log(err);
     }
@@ -120,8 +122,7 @@ function main() {
 
     const jobQueue = jobs.reduce(async (queue, data) => {
         const dataArray = await queue;
-        await scrapeCharityPage(data['index'], data['element'], data['page']);
-        dataArray.push(data);
+        dataArray.push(await scrapeCharityPage(data['index'], data['element'], data['page']));
         return dataArray;
     }, Promise.resolve([]));
 

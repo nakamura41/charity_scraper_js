@@ -56,7 +56,9 @@ async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId
 
     const nightmare = new Nightmare({show: false});
     let targetItemLink = '';
+
     let result = {};
+
     try {
         await nightmare
             .goto(START)
@@ -80,7 +82,7 @@ async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId
                 .wait(4000)
         }
 
-       targetItemLink = await nightmare
+        targetItemLink = await nightmare
             .wait(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`)
             .evaluate((itemNo) => {
                 return document.querySelector(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`).value;
@@ -93,25 +95,26 @@ async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId
     }
 
     try {
+        let data = [{
+                'category_id': categoryId,
+                'primary_sector': primarySector,
+                'sub_setor': subSector
+            }];
 
         result = await nightmare
             .goto(targetItemLink)
             .wait('#ctl00_PlaceHolderMain_lblAddress')
-            .evaluate((layoutMapping) => {
-                let data = {};
+            .evaluate((layoutMapping, data) => {
                 for (let item in layoutMapping) {
-                    data[item] = document.querySelector(layoutMapping[item]).innerText;
+                    data[0][item] = document.querySelector(layoutMapping[item]).innerText;
                 }
                 return data;
-            }, layoutMapping)
+            }, layoutMapping, data)
             .end()
-            .then((data) => {
-                data['category_id'] = categoryId;
-                data['primary_sector'] = primarySector;
-                data['sub_sector'] = subSector;
-                console.log(`------------------------------------------------`);
-                console.log(`captured data`);
-                console.log(data);
+            .then(data => {
+                const csvData = csvFormat(data.filter(i => i));
+                writeFileSync(`./data/detail/profile_${linkId}_${pageNo}_${itemNo}.csv`, csvData, {encoding: 'utf8'});
+                console.log(`Finish Processing charities on primary sector ${primarySector} sub sector ${subSector} page ${pageNo} item ${itemNo}`);
                 return data;
             });
 
@@ -123,27 +126,29 @@ async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId
 
 function main() {
     let index = 0;
-    let pageNo = 1;
-
-    let charitiesCategory = inputData[index];
-    console.log(charitiesCategory);
-
-    charitiesCategory['page_count'] = calculatePageCount(charitiesCategory['record_count']);
-
     let jobs = [];
-    for (let i = 1; i <= charitiesCategory['record_count']; i++) {
-        jobs.push({
-            'index': index,
-            'primary_sector': charitiesCategory['primary_sector'],
-            'sub_sector': charitiesCategory['sub_sector'],
-            'link_id': charitiesCategory['link_id'],
-            'item_no': (i - 1) % 5,
-            'page_no': pageNo
-        });
-        if (i % 5 === 0) {
-            pageNo += 1;
+
+    inputData.forEach(charitiesCategory => {
+        let pageNo = 1;
+
+        charitiesCategory['page_count'] = calculatePageCount(charitiesCategory['record_count']);
+
+        for (let i = 1; i <= charitiesCategory['record_count']; i++) {
+            jobs.push({
+                'index': index,
+                'primary_sector': charitiesCategory['primary_sector'],
+                'sub_sector': charitiesCategory['sub_sector'],
+                'link_id': charitiesCategory['link_id'],
+                'item_no': (i - 1) % 5,
+                'page_no': pageNo
+            });
+            if (i % 5 === 0) {
+                pageNo += 1;
+            }
         }
-    }
+
+        index += 1;
+    });
 
     const jobQueue = jobs.reduce(async (queue, data) => {
         const dataArray = await queue;
@@ -151,13 +156,7 @@ function main() {
         return dataArray;
     }, Promise.resolve([]));
 
-    jobQueue.then(data => {
-        const csvData = csvFormat(data.filter(i => i));
-        writeFileSync(`./data/detail/profile_${charitiesCategory['link_id']}.csv`, csvData, {encoding: 'utf8'});
-
-        console.log(`Finish Processing charities on primary sector ${charitiesCategory['primary_sector']} sub sector ${charitiesCategory['sub_sector']}`);
-        return data;
-    }).catch(e => console.error(e));
+    jobQueue.catch(e => console.error(e));
 }
 
 main();

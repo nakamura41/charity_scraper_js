@@ -1,4 +1,5 @@
 node_modules
-*.csv
 .idea
-data/*
+data/output*.csv
+data/charities*.csv
+data/detail/*.csv

@@ -1,0 +1,65 @@
+primary_sector,sub_sector,link_id,record_count
+Arts and Heritage,Historical & Cultural Conservation,#art1,26
+Arts and Heritage,Literary Arts,#art2,10
+Arts and Heritage,Music & Orchestras,#art3,30
+Arts and Heritage,"Professional, Contemporary & Ethnic Dance",#art4,19
+Arts and Heritage,Theatre & Dramatic Arts,#art5,44
+Arts and Heritage,Traditional Ethnic Performing Arts,#art6,20
+Arts and Heritage,Training & Education,#art7,27
+Arts and Heritage,Visual Arts,#art8,31
+Arts and Heritage,Others,#art9,18
+Community,South West,#com1,17
+Community,North West,#com2,19
+Community,Central,#com3,24
+Community,North East,#com4,18
+Community,South East,#com5,12
+Education,Local Educational Institutions/Funds,#edu1,40
+Education,Foreign Educational Institutions/Funds,#edu2,28
+Education,Foundations & Trusts,#edu3,38
+Education,Uniformed Groups,#edu4,6
+Education,Government-Aided Schools,#edu5,0
+Education,Independent Schools,#edu6,0
+Education,Others,#edu7,16
+Health,Cluster/Hospital Funds,#hea1,14
+Health,Community/Chronic Sick Hospital,#hea2,4
+Health,Day Rehabilitation Centre,#hea3,14
+Health,Diseases/Illnessess Support Group,#hea4,34
+Health,Home Care,#hea5,10
+Health,Hospice,#hea6,6
+Health,Hospital/Statutory Board,#hea7,2
+Health,Nursing Home,#hea8,18
+Health,Other Community-based Services,#hea9,15
+Health,Palliative Home Care,#hea10,5
+Health,Health Professional Group,#hea11,14
+Health,Renal Dialysis,#hea12,2
+Health,TCM Clinic,#hea13,11
+Health,Trust/Research Funds,#hea14,10
+Health,Others,#hea15,30
+Religious,Buddhism,#rel1,175
+Religious,Christianity,#rel2,625
+Religious,Hinduism,#rel3,39
+Religious,Islam,#rel4,12
+Religious,Taoism,#rel5,184
+Religious,Others,#rel6,36
+Social and Welfare,Children/Youth,#soc1,155
+Social and Welfare,Disability (Children),#soc2,34
+Social and Welfare,Disability (Adult),#soc3,46
+Social and Welfare,Eldercare,#soc4,95
+Social and Welfare,Family,#soc5,107
+Social and Welfare,Support Groups,#soc6,56
+Social and Welfare,Community,#soc7,234
+Sports,NSAs,#spo1,56
+Sports,Non-NSAs,#spo2,11
+Sports,Disability Sports,#spo3,8
+Sports,Competitive Sports,#spo4,4
+Sports,Mind Sports,#spo5,0
+Sports,Trust Funds,#spo6,0
+Sports,Youth Sports,#spo7,3
+Sports,Others,#spo8,3
+Others,Animal Welfare,#oth1,15
+Others,Children/Youth,#oth2,31
+Others,Environment,#oth3,26
+Others,Humanitarian Aid,#oth4,10
+Others,Self-Help Groups,#oth5,6
+Others,Think Tanks,#oth6,16
+Others,General Charitable Purposes,#oth7,141

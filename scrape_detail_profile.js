@@ -50,8 +50,8 @@ function getTargetLink(pageNo) {
 async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId, pageNo, itemNo) {
 
     console.log(`------------------------------------------------`);
-    console.log(`Processing category ${categoryId} page ${pageNo} item ${itemNo}`);
-    console.log(`Primary sector ${primarySector} sub sector ${subSector}`);
+    console.log(`Processing organisation profile: category ${categoryId}, page ${pageNo}, item ${itemNo}`);
+    console.log(`Primary sector ${primarySector}, sub sector ${subSector}`);
     console.log(`------------------------------------------------`);
 
     const nightmare = new Nightmare({show: false});
@@ -66,6 +66,8 @@ async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId
             .inject('js', 'extra/inject_link.js')
             .wait(linkId)
             .click(linkId)
+            .wait('#a2')
+            .inject('js', 'extra/inject.js');
     } catch (e) {
         console.error(e);
     }
@@ -81,12 +83,17 @@ async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId
                 .click(targetPageLink)
                 .wait(4000)
         }
+    } catch (e) {
+        console.error(e);
+    }
 
+    try {
+        let hiddenElement = `#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`;
         targetItemLink = await nightmare
-            .wait(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`)
-            .evaluate((itemNo) => {
-                return document.querySelector(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`).value;
-            }, itemNo)
+            .wait(hiddenElement)
+            .evaluate(hiddenElement => {
+                return document.querySelector(hiddenElement).value;
+            }, hiddenElement)
             .then(itemLink => {
                 return itemLink;
             });
@@ -114,7 +121,7 @@ async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId
             .then(data => {
                 const csvData = csvFormat(data.filter(i => i));
                 writeFileSync(`./data/detail/profile_${linkId}_${pageNo}_${itemNo}.csv`, csvData, {encoding: 'utf8'});
-                console.log(`Finish Processing charities on primary sector ${primarySector} sub sector ${subSector} page ${pageNo} item ${itemNo}`);
+                console.log(`Finish Processing charities profile on primary sector ${primarySector} sub sector ${subSector} page ${pageNo} item ${itemNo}`);
                 return data;
             });
 
@@ -125,12 +132,11 @@ async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId
 }
 
 function main() {
-    let index = 0;
+    let index = 37;
     let jobs = [];
 
     inputData.forEach(charitiesCategory => {
         let pageNo = 1;
-
         charitiesCategory['page_count'] = calculatePageCount(charitiesCategory['record_count']);
 
         for (let i = 1; i <= charitiesCategory['record_count']; i++) {

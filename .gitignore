@@ -1,5 +1,5 @@
 node_modules
 .idea
-data/output_*.csv
-data/final/charities*.csv
-data/detail/*.csv
+data/main/*
+data/final/*
+data/detail/*

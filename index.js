@@ -98,7 +98,7 @@ async function scrapeCharityPage(categoryId, categoryElementSelector, pageNo) {
             .end()
             .then(data => {
                 const csvData = csvFormat(data.filter(i => i));
-                writeFileSync(`./data/output_${categoryId}_${pageNo}.csv`, csvData, {encoding: 'utf8'});
+                writeFileSync(`./data/main/output_${categoryId}_${pageNo}.csv`, csvData, {encoding: 'utf8'});
                 console.log(`Finish Processing category ${categoryId} page ${pageNo}`);
                 return data;
             });

@@ -202,121 +202,137 @@ const nightmare = new Nightmare({show: false});
 
 async function scrapeCharityCompliance(categoryId, primarySector, subSector, linkId, pageNo, itemNo) {
 
-    console.log(`------------------------------------------------`);
-    console.log(`Processing code compliance: category ${categoryId}, page ${pageNo}, item ${itemNo}`);
-    console.log(`Primary sector ${primarySector}, sub sector ${subSector}`);
-    console.log(`------------------------------------------------`);
-
-    let targetItemLink = '';
-
+    const max_attempts = 5;
+    let success = false;
     let result = {};
 
-    try {
-        await nightmare
-            .goto(START)
-            .wait('#ctl00_PlaceHolderMain_btnSearch')
-            .inject('js', 'extra/inject_link.js')
-            .wait(linkId)
-            .click(linkId)
-            .wait('#a2')
-            .inject('js', 'extra/inject.js');
+    for (let attempt_no = 1; attempt_no <= max_attempts || success; attempt_no++) {
+        console.log(`================================================`);
+        console.log(`Processing code compliance: category ${categoryId}, page ${pageNo}, item ${itemNo}`);
+        console.log(`Primary sector ${primarySector}, sub sector ${subSector}`);
+        console.log(`Attempt No: ${attempt_no}`);
+        console.log(`================================================`);
 
-        let targetPageLink = getTargetLink(pageNo);
+        let targetItemLink = '';
 
-        // click page link if it is not selected
-        if (targetPageLink !== '') {
-            console.log(`click page link ${targetPageLink} if it is not selected`);
+        try {
+            console.log(`Loading main page`);
             await nightmare
-                .wait(targetPageLink)
-                .click(targetPageLink)
-                .wait(3000)
-        }
+                .goto(START)
+                .wait('#ctl00_PlaceHolderMain_btnSearch')
+                .inject('js', 'extra/inject_link.js')
+                .wait(linkId)
+                .click(linkId)
+                .inject('js', 'extra/inject.js');
 
-        targetItemLink = await nightmare
-            .wait(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`)
-            .evaluate((itemNo) => {
-                return document.querySelector(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`).value;
-            }, itemNo)
-            .then(itemLink => {
-                return itemLink;
-            });
+            let targetPageLink = getTargetLink(pageNo);
 
-        let mainData = {
-            'category_id': categoryId,
-            'primary_sector': primarySector,
-            'sub_setor': subSector
-        };
+            // click page link if it is not selected
+            if (targetPageLink !== '') {
+                console.log(`click page link ${targetPageLink} if it is not selected`);
+                await nightmare
+                    .wait(targetPageLink)
+                    .click(targetPageLink)
+                    .wait(3000)
+            }
 
-        mainData = await nightmare
-            .goto(targetItemLink)
-            .wait('#ctl00_PlaceHolderMain_lblAddress')
-            .evaluate((layoutMapping, mainData) => {
-                for (let item in layoutMapping) {
-                    mainData[item] = document.querySelector(layoutMapping[item]).innerText;
-                }
-                return mainData;
-            }, layoutProfileMapping, mainData);
-
-        let item = await nightmare
-            .click('#ctl00_PlaceHolderMain_Menu1n3 > table > tbody > tr > td > a')
-            .wait(2000)
-            .wait('#ctl00_PlaceHolderMain_lblFY01Status')
-            .evaluate((mainData) => {
-                // this JavaScript way of deep copying an object
-                let tempData = JSON.parse(JSON.stringify(mainData));
-
-                // check the last year code compliance status
-                tempData['index'] = 1;
-                tempData['evaluation_period'] = document.querySelector(`#ctl00_PlaceHolderMain_lblFY01`).innerText;
-                tempData['evaluation_status'] = document.querySelector(`#ctl00_PlaceHolderMain_lblFY01Status`).innerText;
-
-                return tempData;
-            }, mainData);
-
-        if (item['evaluation_status'] === 'Received' || item['evaluation_status'] === 'Late') {
-            console.log(`capturing charity compliance ${item['evaluation_period']}, status: ${item['evaluation_status']}`);
-
-            result = await nightmare
-                .wait('#ctl00_PlaceHolderMain_FY1_gvGECChecklist > tbody > tr:nth-child(4) > td:nth-child(4)')
-                .wait(3000)
-                .evaluate((layoutComplianceMapping, item) => {
-                    let data = [];
-                    data[0] = JSON.parse(JSON.stringify(item));
-                    for (let key in layoutComplianceMapping) {
-                        for (let sub_key in layoutComplianceMapping[key]) {
-                            try {
-                                data[0][`${key}_${sub_key}`] = document.querySelector(layoutComplianceMapping[key][sub_key]).innerText.replace(/\s+/, "");
-                            } catch (e) {
-                                data[0][`${key}_${sub_key}`] = '';
-                            }
-                        }
-                    }
-                    return data;
-                }, layoutComplianceMapping, item)
-                .then(data => {
-                    console.log(data);
-                    console.log(`------------------------------------------------`);
-                    const csvData = csvFormat(data.filter(i => i));
-                    writeFileSync(`./data/detail/compliance_${linkId}_${pageNo}_${itemNo}.csv`, csvData, {encoding: 'utf8'});
-                    console.log(`Finish Processing charities compliance on primary sector ${primarySector} sub sector ${subSector} page ${pageNo} item ${itemNo}`);
-                    return data;
+            console.log(`Capturing targetItemLink`);
+            targetItemLink = await nightmare
+                .wait(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`)
+                .evaluate((itemNo) => {
+                    return document.querySelector(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`).value;
+                }, itemNo)
+                .then(itemLink => {
+                    return itemLink;
                 });
 
-            return result;
-        } else {
-            return {};
-        }
+            let mainData = {
+                'category_id': categoryId,
+                'primary_sector': primarySector,
+                'sub_setor': subSector
+            };
 
-    } catch (e) {
-        console.error(e);
+            console.log(`Acquiring main profile information`);
+            mainData = await nightmare
+                .goto(targetItemLink)
+                .wait('#ctl00_PlaceHolderMain_lblAddress')
+                .evaluate((layoutMapping, mainData) => {
+                    for (let item in layoutMapping) {
+                        mainData[item] = document.querySelector(layoutMapping[item]).innerText;
+                    }
+                    return mainData;
+                }, layoutProfileMapping, mainData);
+
+            console.log(`Getting code of compliance evaluation period and status`);
+            let item = await nightmare
+                .click('#ctl00_PlaceHolderMain_Menu1n3 > table > tbody > tr > td > a')
+                .wait(2000)
+                .wait('#ctl00_PlaceHolderMain_lblFY01Status')
+                .evaluate((mainData) => {
+                    // this JavaScript way of deep copying an object
+                    let tempData = JSON.parse(JSON.stringify(mainData));
+
+                    // check the last year code compliance status
+                    tempData['index'] = 1;
+                    tempData['evaluation_period'] = document.querySelector(`#ctl00_PlaceHolderMain_lblFY01`).innerText;
+                    tempData['evaluation_status'] = document.querySelector(`#ctl00_PlaceHolderMain_lblFY01Status`).innerText;
+
+                    return tempData;
+                }, mainData);
+
+            if (item['evaluation_status'] === 'Received' || item['evaluation_status'] === 'Late') {
+                console.log(`capturing charity compliance detail, period: ${item['evaluation_period']}, status: ${item['evaluation_status']}`);
+
+                result = await nightmare
+                    .wait('#ctl00_PlaceHolderMain_FY1_gvGECChecklist > tbody > tr:nth-child(4) > td:nth-child(4)')
+                    .wait(3000)
+                    .evaluate((layoutComplianceMapping, item) => {
+                        let data = [];
+                        data[0] = JSON.parse(JSON.stringify(item));
+                        for (let key in layoutComplianceMapping) {
+                            for (let sub_key in layoutComplianceMapping[key]) {
+                                try {
+                                    data[0][`${key}_${sub_key}`] = document.querySelector(layoutComplianceMapping[key][sub_key]).innerText.replace(/\s+/, "");
+                                } catch (e) {
+                                    data[0][`${key}_${sub_key}`] = '';
+                                }
+                            }
+                        }
+                        return data;
+                    }, layoutComplianceMapping, item)
+                    .then(data => {
+                        const csvData = csvFormat(data.filter(i => i));
+                        writeFileSync(`./data/detail/compliance_${linkId}_${pageNo}_${itemNo}.csv`, csvData, {encoding: 'utf8'});
+                        console.log(`------------------------------------------------`);
+                        console.log(`Finish writing charity compliance information`);
+                        console.log(`File: ./data/detail/compliance_${linkId}_${pageNo}_${itemNo}.csv`);
+                        success = true;
+                        return data;
+                    });
+
+                return result;
+            } else {
+                console.log(`------------------------------------------------`);
+                console.log(`No charity compliance information`);
+                return {};
+            }
+
+        } catch (e) {
+            console.error(e);
+
+            // give time for the charity website to cool down after repetitive request
+            const delayInMilliseconds = 5000; //5 seconds
+            setTimeout(function(){
+                console.log('***** retry after 5 seconds *****');
+            }, delayInMilliseconds);
+        }
     }
 
     return result;
 }
 
 function main() {
-    //let index = 0;
-    let index = 7;
+    let index = 0;
     let jobs = [];
 
     const inputFile = readFileSync('./data/input_links_compliance.csv', {encoding: 'utf8'});
@@ -330,9 +346,21 @@ function main() {
         }
     });
 
+    // use this code to start from the specific category and page no //
+    // ****************** in case of emergency ********************* //
+    index = 36;
+    // ****************** in case of emergency ********************* //
+
     inputData.forEach(charitiesCategory => {
         let pageNo = 1;
-        charitiesCategory['page_count'] = calculatePageCount(charitiesCategory['record_count']);
+
+        // use this code to start from the specific category and page no //
+        // ****************** in case of emergency ********************* //
+        if (index === 36) {
+            pageNo = 11;
+            charitiesCategory['record_count'] -= (pageNo * charityPerPage);
+        }
+        // ****************** in case of emergency ********************* //
 
         for (let i = 1; i <= charitiesCategory['record_count']; i++) {
             jobs.push({

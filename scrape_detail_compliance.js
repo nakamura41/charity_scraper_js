@@ -257,30 +257,27 @@ async function scrapeCharityCompliance(categoryId, primarySector, subSector, lin
                 return mainData;
             }, layoutProfileMapping, mainData);
 
-        result = await nightmare
+        let item = await nightmare
             .click('#ctl00_PlaceHolderMain_Menu1n3 > table > tbody > tr > td > a')
-            .wait(3000)
+            .wait(2000)
+            .wait('#ctl00_PlaceHolderMain_lblFY01Status')
             .evaluate((mainData) => {
                 // this JavaScript way of deep copying an object
                 let tempData = JSON.parse(JSON.stringify(mainData));
 
                 // check the last year code compliance status
-                let i = 0;
-                tempData['index'] = i;
-                tempData['evaluation_period'] = document.querySelector(`#ctl00_PlaceHolderMain_lblFY0${i + 1}`).innerText;
-                tempData['evaluation_status'] = document.querySelector(`#ctl00_PlaceHolderMain_lblFY0${i + 1}Status`).innerText;
+                tempData['index'] = 1;
+                tempData['evaluation_period'] = document.querySelector(`#ctl00_PlaceHolderMain_lblFY01`).innerText;
+                tempData['evaluation_status'] = document.querySelector(`#ctl00_PlaceHolderMain_lblFY01Status`).innerText;
 
                 return tempData;
             }, mainData);
 
-        let item = result;
-
         if (item['evaluation_status'] === 'Received' || item['evaluation_status'] === 'Late') {
             console.log(`capturing charity compliance ${item['evaluation_period']}, status: ${item['evaluation_status']}`);
 
-            let index = item['index'];
             result = await nightmare
-                //.click(`#ctl00_PlaceHolderMain_MenuEvalPeriodsn${index} > td > table > tbody > tr > td > a`)
+                .wait('#ctl00_PlaceHolderMain_FY1_gvGECChecklist > tbody > tr:nth-child(4) > td:nth-child(4)')
                 .wait(3000)
                 .evaluate((layoutComplianceMapping, item) => {
                     let data = [];
@@ -297,6 +294,8 @@ async function scrapeCharityCompliance(categoryId, primarySector, subSector, lin
                     return data;
                 }, layoutComplianceMapping, item)
                 .then(data => {
+                    console.log(data);
+                    console.log(`------------------------------------------------`);
                     const csvData = csvFormat(data.filter(i => i));
                     writeFileSync(`./data/detail/compliance_${linkId}_${pageNo}_${itemNo}.csv`, csvData, {encoding: 'utf8'});
                     console.log(`Finish Processing charities compliance on primary sector ${primarySector} sub sector ${subSector} page ${pageNo} item ${itemNo}`);
@@ -317,7 +316,7 @@ async function scrapeCharityCompliance(categoryId, primarySector, subSector, lin
 
 function main() {
     //let index = 0;
-    let index = 5;
+    let index = 7;
     let jobs = [];
 
     const inputFile = readFileSync('./data/input_links_compliance.csv', {encoding: 'utf8'});

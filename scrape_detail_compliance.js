@@ -319,12 +319,6 @@ async function scrapeCharityCompliance(categoryId, primarySector, subSector, lin
 
         } catch (e) {
             console.error(e);
-
-            // give time for the charity website to cool down after repetitive request
-            const delayInMilliseconds = 5000; //5 seconds
-            setTimeout(function(){
-                console.log('***** retry after 5 seconds *****');
-            }, delayInMilliseconds);
         }
     }
 

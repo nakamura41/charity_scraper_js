@@ -54,11 +54,11 @@ async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId
     let result = {};
 
     for (let attempt_no = 1; attempt_no <= max_attempts || success; attempt_no++) {
-        console.log(`------------------------------------------------`);
+        console.log(`================================================`);
         console.log(`Processing organisation profile: category ${categoryId}, page ${pageNo}, item ${itemNo}`);
         console.log(`Primary sector ${primarySector}, sub sector ${subSector}`);
         console.log(`Attempt No: ${attempt_no}`);
-        console.log(`------------------------------------------------`);
+        console.log(`================================================`);
 
         const nightmare = new Nightmare({show: false});
         let targetItemLink = '';

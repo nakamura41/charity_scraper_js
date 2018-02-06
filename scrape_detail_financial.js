@@ -111,48 +111,18 @@ const nightmare = new Nightmare({show: false});
 
 async function scrapeCharityFinancial(categoryId, primarySector, subSector, linkId, pageNo, itemNo) {
 
-    console.log(`------------------------------------------------`);
-    console.log(`Processing financial information: category ${categoryId}, page ${pageNo}, item ${itemNo}`);
-    console.log(`Primary sector ${primarySector}, sub sector ${subSector}`);
-    console.log(`------------------------------------------------`);
+    const max_attempts = 5;
+    let success = false;
 
-    let targetItemLink = '';
+    for (let attempt_no = 1; attempt_no <= max_attempts || success; attempt_no++) {
+        console.log(`================================================`);
+        console.log(`Processing financial information: category ${categoryId}, page ${pageNo}, item ${itemNo}`);
+        console.log(`Primary sector ${primarySector}, sub sector ${subSector}`);
+        console.log(`Attempt No: ${attempt_no}`);
+        console.log(`================================================`);
 
-    let result = {};
 
-    try {
-        await nightmare
-            .wait(3000)
-            .goto(START)
-            .wait('#ctl00_PlaceHolderMain_btnSearch')
-            .inject('js', 'extra/inject_link.js')
-            .wait(linkId)
-            .click(linkId)
-            .wait(3000)
-            .inject('js', 'extra/inject.js')
-            .wait('#a11');
-
-        let targetPageLink = getTargetLink(pageNo);
-
-        // click page link if it is not selected
-        if (targetPageLink !== '') {
-            console.log(`click page link ${targetPageLink} if it is not selected`);
-            await nightmare
-                .wait(targetPageLink)
-                .click(targetPageLink)
-                .wait(3000)
-        }
-
-        console.log('Opening main page');
-
-        targetItemLink = await nightmare
-            .wait(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`)
-            .evaluate((itemNo) => {
-                return document.querySelector(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`).value;
-            }, itemNo)
-            .then(itemLink => {
-                return itemLink;
-            });
+        let targetItemLink = '';
 
         let mainData = {
             'category_id': categoryId,
@@ -160,54 +130,117 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
             'sub_setor': subSector
         };
 
-        console.log('Getting main information');
-        mainData = await nightmare
-            .goto(targetItemLink)
-            .wait('#ctl00_PlaceHolderMain_lblAddress')
-            .evaluate((layoutMapping, mainData) => {
-                for (let item in layoutMapping) {
-                    mainData[item] = document.querySelector(layoutMapping[item]).innerText;
-                }
-                return mainData;
-            }, layoutProfileMapping, mainData);
+        try {
+            await nightmare
+                .wait(3000)
+                .goto(START)
+                .wait('#ctl00_PlaceHolderMain_btnSearch')
+                .inject('js', 'extra/inject_link.js')
+                .wait(linkId)
+                .click(linkId)
+                .wait(3000)
+                .inject('js', 'extra/inject.js')
+                .wait('#a11');
 
-        console.log('Getting Financial Information');
-        result = await nightmare
-            .click('#ctl00_PlaceHolderMain_Menu1n1 > table > tbody > tr > td > a')
-            .wait(3000)
-            .evaluate((layoutFinancialMapping, mainData) => {
+            let targetPageLink = getTargetLink(pageNo);
 
-                let data = [];
-                for (let key in layoutFinancialMapping) {
-                    // this JavaScript way of deep copying an object
-                    let tempData = JSON.parse(JSON.stringify(mainData));
+            // click page link if it is not selected
+            if (targetPageLink !== '') {
+                console.log(`click page link ${targetPageLink} if it is not selected`);
+                await nightmare
+                    .wait(targetPageLink)
+                    .click(targetPageLink)
+                    .wait(3000)
+            }
 
-                    // check the last year code compliance status
-                    for (let sub_key in layoutFinancialMapping[key]) {
-                        tempData['index'] = key;
-                        try {
-                            tempData[sub_key] = document.querySelector(layoutFinancialMapping[key][sub_key]).innerText;
-                        } catch (e) {
-                            tempData[sub_key] = 0;
-                        }
+            console.log('Opening main page');
+
+            targetItemLink = await nightmare
+                .wait(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`)
+                .evaluate((itemNo) => {
+                    return document.querySelector(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`).value;
+                }, itemNo)
+                .then(itemLink => {
+                    return itemLink;
+                });
+
+            console.log('Getting main information');
+            mainData = await nightmare
+                .goto(targetItemLink)
+                .wait('#ctl00_PlaceHolderMain_lblAddress')
+                .evaluate((layoutMapping, mainData) => {
+                    for (let item in layoutMapping) {
+                        mainData[item] = document.querySelector(layoutMapping[item]).innerText;
                     }
+                    success = true;
+                    return mainData;
+                }, layoutProfileMapping, mainData);
+        }
+        catch
+            (e) {
+            console.error(e);
+        }
+    }
 
-                    data.push(tempData);
-                }
+    let result = {};
+    if (success) {
+        try {
+            let financial_information_exists = false;
 
-                return data;
-            }, layoutFinancialMapping, mainData)
-            .then(data => {
-                const csvData = csvFormat(data.filter(i => i));
-                writeFileSync(`./data/detail/financial_${linkId}_${pageNo}_${itemNo}.csv`, csvData, {encoding: 'utf8'});
+            console.log('Checking whether we can access financial information or not...');
+            await nightmare
+                .click('#ctl00_PlaceHolderMain_Menu1n1 > table > tbody > tr > td > a')
+                .wait(3000)
+                .evaluate(() => {
+                    // check whether we can access financial information page
+                    let latest_financial_period = document.querySelector('#ctl00_PlaceHolderMain_gvFinancialInformation > tbody > tr:nth-child(2) > td:nth-child(1)').innerText;
+                    console.log(`latest financial period: ${latest_financial_period}`);
+                    financial_information_exists = true;
+                });
+
+            if (financial_information_exists) {
+                console.log('Getting Financial Information');
+                result = await nightmare
+                    .evaluate((layoutFinancialMapping, mainData) => {
+                        let data = [];
+                        for (let key in layoutFinancialMapping) {
+                            // this JavaScript way of deep copying an object
+                            let tempData = JSON.parse(JSON.stringify(mainData));
+
+                            // check the last year code compliance status
+                            for (let sub_key in layoutFinancialMapping[key]) {
+                                tempData['index'] = key;
+                                try {
+                                    tempData[sub_key] = document.querySelector(layoutFinancialMapping[key][sub_key]).innerText;
+                                } catch (e) {
+                                    tempData[sub_key] = 0;
+                                }
+                            }
+
+                            data.push(tempData);
+                        }
+
+                        return data;
+                    }, layoutFinancialMapping, mainData)
+                    .then(data => {
+                        const csvData = csvFormat(data.filter(i => i));
+                        writeFileSync(`./data/detail/financial_${linkId}_${pageNo}_${itemNo}.csv`, csvData, {encoding: 'utf8'});
+                        console.log(`------------------------------------------------`);
+                        console.log(`Finish writing charity financial information`);
+                        console.log(`File: ./data/detail/profile_${linkId}_${pageNo}_${itemNo}.csv`);
+                        return data;
+                    });
+            } else {
                 console.log(`------------------------------------------------`);
-                console.log(`Finish writing charity financial information`);
-                console.log(`File: ./data/detail/profile_${linkId}_${pageNo}_${itemNo}.csv`);
-                return data;
-            });
+                console.log(`No accessible financial information`);
+                return {};
+            }
 
-    } catch (e) {
-        console.error(e);
+        }
+        catch
+            (e) {
+            console.error(e);
+        }
     }
 
     return result;

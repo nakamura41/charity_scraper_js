@@ -122,13 +122,15 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
 
     try {
         await nightmare
+            .wait(3000)
             .goto(START)
             .wait('#ctl00_PlaceHolderMain_btnSearch')
             .inject('js', 'extra/inject_link.js')
             .wait(linkId)
             .click(linkId)
-            .wait('#a2')
-            .inject('js', 'extra/inject.js');
+            .wait(3000)
+            .inject('js', 'extra/inject.js')
+            .wait('#a11');
 
         let targetPageLink = getTargetLink(pageNo);
 
@@ -198,11 +200,12 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
             .then(data => {
                 const csvData = csvFormat(data.filter(i => i));
                 writeFileSync(`./data/detail/financial_${linkId}_${pageNo}_${itemNo}.csv`, csvData, {encoding: 'utf8'});
-                console.log(`Finish Processing charities financial on primary sector ${primarySector} sub sector ${subSector} page ${pageNo} item ${itemNo}`);
+                console.log(`------------------------------------------------`);
+                console.log(`Finish writing charity financial information`);
+                console.log(`File: ./data/detail/profile_${linkId}_${pageNo}_${itemNo}.csv`);
                 return data;
             });
 
-        return result;
     } catch (e) {
         console.error(e);
     }
@@ -227,8 +230,6 @@ function main() {
 
     inputData.forEach(charitiesCategory => {
         let pageNo = 1;
-        charitiesCategory['page_count'] = calculatePageCount(charitiesCategory['record_count']);
-
         for (let i = 1; i <= charitiesCategory['record_count']; i++) {
             jobs.push({
                 'index': index,

@@ -49,86 +49,99 @@ function getTargetLink(pageNo) {
 
 async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId, pageNo, itemNo) {
 
-    console.log(`------------------------------------------------`);
-    console.log(`Processing organisation profile: category ${categoryId}, page ${pageNo}, item ${itemNo}`);
-    console.log(`Primary sector ${primarySector}, sub sector ${subSector}`);
-    console.log(`------------------------------------------------`);
-
-    const nightmare = new Nightmare({show: false});
-    let targetItemLink = '';
-
+    const max_attempts = 5;
+    let success = false;
     let result = {};
 
-    try {
-        await nightmare
-            .goto(START)
-            .wait('#ctl00_PlaceHolderMain_btnSearch')
-            .inject('js', 'extra/inject_link.js')
-            .wait(linkId)
-            .click(linkId)
-            .wait('#a2')
-            .inject('js', 'extra/inject.js');
-    } catch (e) {
-        console.error(e);
-    }
+    for (let attempt_no = 1; attempt_no <= max_attempts || success; attempt_no++) {
+        console.log(`------------------------------------------------`);
+        console.log(`Processing organisation profile: category ${categoryId}, page ${pageNo}, item ${itemNo}`);
+        console.log(`Primary sector ${primarySector}, sub sector ${subSector}`);
+        console.log(`Attempt No: ${attempt_no}`);
+        console.log(`------------------------------------------------`);
 
-    try {
-        let targetPageLink = getTargetLink(pageNo);
+        const nightmare = new Nightmare({show: false});
+        let targetItemLink = '';
 
-        // click page link if it is not selected
-        if (targetPageLink !== '') {
-            console.log(`click page link ${targetPageLink} if it is not selected`);
+        let result = {};
+
+        try {
             await nightmare
-                .wait(targetPageLink)
-                .click(targetPageLink)
-                .wait(4000)
+                .wait(3000)
+                .goto(START)
+                .wait('#ctl00_PlaceHolderMain_btnSearch')
+                .inject('js', 'extra/inject_link.js')
+                .wait(linkId)
+                .click(linkId)
+                .wait(3000)
+                .inject('js', 'extra/inject.js')
+                .wait('#a11');
+        } catch (e) {
+            console.error(e);
         }
-    } catch (e) {
-        console.error(e);
-    }
 
-    try {
-        let hiddenElement = `#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`;
-        targetItemLink = await nightmare
-            .wait(hiddenElement)
-            .evaluate(hiddenElement => {
-                return document.querySelector(hiddenElement).value;
-            }, hiddenElement)
-            .then(itemLink => {
-                return itemLink;
-            });
-    } catch (e) {
-        console.error(e);
-    }
+        try {
+            let targetPageLink = getTargetLink(pageNo);
 
-    try {
-        let data = [{
+            // click page link if it is not selected
+            if (targetPageLink !== '') {
+                console.log(`click page link ${targetPageLink} if it is not selected`);
+                await nightmare
+                    .wait(targetPageLink)
+                    .click(targetPageLink)
+                    .wait(3000)
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        try {
+            let hiddenElement = `#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`;
+            targetItemLink = await nightmare
+                .wait(hiddenElement)
+                .evaluate(hiddenElement => {
+                    return document.querySelector(hiddenElement).value;
+                }, hiddenElement)
+                .then(itemLink => {
+                    return itemLink;
+                });
+        } catch (e) {
+            console.error(e);
+        }
+
+        try {
+            let data = [{
                 'category_id': categoryId,
                 'primary_sector': primarySector,
                 'sub_setor': subSector
             }];
 
-        result = await nightmare
-            .goto(targetItemLink)
-            .wait('#ctl00_PlaceHolderMain_lblAddress')
-            .evaluate((layoutMapping, data) => {
-                for (let item in layoutMapping) {
-                    data[0][item] = document.querySelector(layoutMapping[item]).innerText;
-                }
-                return data;
-            }, layoutMapping, data)
-            .end()
-            .then(data => {
-                const csvData = csvFormat(data.filter(i => i));
-                writeFileSync(`./data/detail/profile_${linkId}_${pageNo}_${itemNo}.csv`, csvData, {encoding: 'utf8'});
-                console.log(`Finish Processing charities profile on primary sector ${primarySector} sub sector ${subSector} page ${pageNo} item ${itemNo}`);
-                return data;
-            });
+            result = await nightmare
+                .goto(targetItemLink)
+                .wait('#ctl00_PlaceHolderMain_lblAddress')
+                .evaluate((layoutMapping, data) => {
+                    for (let item in layoutMapping) {
+                        data[0][item] = document.querySelector(layoutMapping[item]).innerText;
+                    }
+                    return data;
+                }, layoutMapping, data)
+                .end()
+                .then(data => {
+                    const csvData = csvFormat(data.filter(i => i));
+                    writeFileSync(`./data/detail/profile_${linkId}_${pageNo}_${itemNo}.csv`, csvData, {encoding: 'utf8'});
+                    console.log(`------------------------------------------------`);
+                    console.log(`Finish writing charity profile information`);
+                    console.log(`File: ./data/detail/profile_${linkId}_${pageNo}_${itemNo}.csv`);
+                    success = true;
+                    return data;
+                });
 
-        return result;
-    } catch (e) {
-        console.error(e);
+        } catch (e) {
+            console.error(e);
+        }
     }
+
+    return result;
 }
 
 function main() {
@@ -137,8 +150,6 @@ function main() {
 
     inputData.forEach(charitiesCategory => {
         let pageNo = 1;
-        charitiesCategory['page_count'] = calculatePageCount(charitiesCategory['record_count']);
-
         for (let i = 1; i <= charitiesCategory['record_count']; i++) {
             jobs.push({
                 'index': index,

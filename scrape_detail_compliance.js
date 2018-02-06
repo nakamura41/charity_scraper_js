@@ -218,6 +218,7 @@ async function scrapeCharityCompliance(categoryId, primarySector, subSector, lin
         try {
             console.log(`Loading main page`);
             await nightmare
+                .wait(3000)
                 .goto(START)
                 .wait('#ctl00_PlaceHolderMain_btnSearch')
                 .inject('js', 'extra/inject_link.js')
@@ -345,7 +346,7 @@ function main() {
 
     // use this code to start from the specific category and page no //
     // ****************** in case of emergency ********************* //
-    index = 36;
+    // index = 36;
     // ****************** in case of emergency ********************* //
 
     inputData.forEach(charitiesCategory => {
@@ -353,10 +354,10 @@ function main() {
 
         // use this code to start from the specific category and page no //
         // ****************** in case of emergency ********************* //
-        if (index === 36) {
-            pageNo = 11;
-            charitiesCategory['record_count'] -= (pageNo * charityPerPage);
-        }
+        // if (index === 36) {
+        //     pageNo = 11;
+        //     charitiesCategory['record_count'] -= (pageNo * charityPerPage);
+        // }
         // ****************** in case of emergency ********************* //
 
         for (let i = 1; i <= charitiesCategory['record_count']; i++) {

@@ -223,7 +223,9 @@ async function scrapeCharityCompliance(categoryId, primarySector, subSector, lin
                 .inject('js', 'extra/inject_link.js')
                 .wait(linkId)
                 .click(linkId)
-                .inject('js', 'extra/inject.js');
+                .wait(3000)
+                .inject('js', 'extra/inject.js')
+                .wait('#a11');
 
             let targetPageLink = getTargetLink(pageNo);
 
@@ -233,7 +235,7 @@ async function scrapeCharityCompliance(categoryId, primarySector, subSector, lin
                 await nightmare
                     .wait(targetPageLink)
                     .click(targetPageLink)
-                    .wait(3000)
+                    .wait(3000);
             }
 
             console.log(`Capturing targetItemLink`);
@@ -243,6 +245,7 @@ async function scrapeCharityCompliance(categoryId, primarySector, subSector, lin
                     return document.querySelector(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`).value;
                 }, itemNo)
                 .then(itemLink => {
+                    console.log(`Acquiring targetItemLink ${itemLink}`);
                     return itemLink;
                 });
 

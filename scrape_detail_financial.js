@@ -131,6 +131,7 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
         };
 
         try {
+            console.log(`Loading main page`);
             await nightmare
                 .wait(3000)
                 .goto(START)
@@ -150,21 +151,21 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
                 await nightmare
                     .wait(targetPageLink)
                     .click(targetPageLink)
-                    .wait(3000)
+                    .wait(3000);
             }
 
-            console.log('Opening main page');
-
+            console.log(`Capturing targetItemLink`);
             targetItemLink = await nightmare
                 .wait(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`)
                 .evaluate((itemNo) => {
                     return document.querySelector(`#ctl00_PlaceHolderMain_lstSearchResults_ctrl${itemNo}_hfViewDetails`).value;
                 }, itemNo)
                 .then(itemLink => {
+                    console.log(`Acquiring targetItemLink ${itemLink}`);
                     return itemLink;
                 });
 
-            console.log('Getting main information');
+            console.log(`Acquiring main profile information`);
             mainData = await nightmare
                 .goto(targetItemLink)
                 .wait('#ctl00_PlaceHolderMain_lblAddress')

@@ -308,8 +308,22 @@ function main() {
         }
     });
 
+    // use this code to restart from the specific category and page no //
+    // ****************** in case of emergency ********************* //
+    // index = 3;
+    // ****************** in case of emergency ********************* //
+
     inputData.forEach(charitiesCategory => {
         let pageNo = 1;
+
+        // use this code to restart from the specific category and page no //
+        // ****************** in case of emergency ********************* //
+        // if (index === 3) {
+        //     pageNo = 4;
+        //     charitiesCategory['record_count'] -= (pageNo * charityPerPage);
+        // }
+        // ****************** in case of emergency ********************* //
+
         for (let i = 1; i <= charitiesCategory['record_count']; i++) {
             jobs.push({
                 'index': index,

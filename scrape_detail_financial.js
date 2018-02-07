@@ -173,7 +173,7 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
         try {
             console.log(`Loading main page`);
             await nightmare
-                .wait(3000)
+                .wait(8000)
                 .goto(START)
                 .wait('#ctl00_PlaceHolderMain_btnSearch')
                 .inject('js', 'extra/inject_link.js')

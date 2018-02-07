@@ -20,9 +20,9 @@ const layoutFinancialMapping = {
         'receipts_donation_cash_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_td_cash_2',
         'receipts_donation_cash_non_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_ntd_cash_2',
         'receipts_donation_cash_total': '#ctl00_PlaceHolderMain_ucFSDetails_income_total_cash_2',
-        'receipts_donation_inkind_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_td_kind_2',
-        'receipts_donation_inkind_non_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_ntd_kind_2',
-        'receipts_donation_inkind_total': '#ctl00_PlaceHolderMain_ucFSDetails_income_total_kind_2',
+        'receipts_donation_kind_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_td_kind_2',
+        'receipts_donation_kind_non_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_ntd_kind_2',
+        'receipts_donation_kind_total': '#ctl00_PlaceHolderMain_ucFSDetails_income_total_kind_2',
         'receipts_government_grants': '#ctl00_PlaceHolderMain_ucFSDetails_income_gov_grants_2',
         'receipts_investment_income': '#ctl00_PlaceHolderMain_ucFSDetails_income_investment_2',
         'receipts_programme_fees': '#ctl00_PlaceHolderMain_ucFSDetails_income_program_fee_2',
@@ -33,12 +33,27 @@ const layoutFinancialMapping = {
         'expenses_charitable_overseas': '#ctl00_PlaceHolderMain_ucFSDetails_expenses_cae_overseas_2',
         'expenses_charitable_total': '#ctl00_PlaceHolderMain_ucFSDetails_expenses_total_cape_2',
         'expenses_others_total': '#ctl00_PlaceHolderMain_ucFSDetails_expenses_other_2',
-        'other_donation_other_charities': '#ctl00_PlaceHolderMain_ucFSDetails_oi_dgs_reg_charity_2',
-        'other_no_of_employees': '#ctl00_PlaceHolderMain_ucFSDetails_oi_employee_no_2',
-        'other_total_employee_costs': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_employee_cost_2',
-        'other_fund_raising_efficiency_ratio': '#ctl00_PlaceHolderMain_ucFSDetails_oi_fr_efficiency_ratio_2',
-        'other_total_related_party_transactions': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_related_party_2',
-        'balance_assets_investments': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_investments_2'
+        'other_info_donation_other_charities': '#ctl00_PlaceHolderMain_ucFSDetails_oi_dgs_reg_charity_2',
+        'other_info_no_of_employees': '#ctl00_PlaceHolderMain_ucFSDetails_oi_employee_no_2',
+        'other_info_total_employee_costs': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_employee_cost_2',
+        'other_info_fund_raising_efficiency_ratio': '#ctl00_PlaceHolderMain_ucFSDetails_oi_fr_efficiency_ratio_2',
+        'other_info_total_related_party_transactions': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_related_party_2',
+        'balance_assets_land_building': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_land_building_2',
+        'balance_assets_other_tangible': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_other_tangible_2',
+        'balance_assets_investments': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_investments_2',
+        'balance_assets_inventories': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_inventories_2',
+        'balance_assets_accounts_receivables': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_accounts_receivables_2',
+        'balance_assets_cash_deposits': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_cash_deposits_2',
+        'balance_assets_other_assets': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_other_2',
+        'balance_assets_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_total_2',
+        'balance_funds_unrestricted': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_unrestricted_2',
+        'balance_funds_restricted': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_restricted_2',
+        'balance_funds_endowment': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_endowment_2',
+        'balance_funds_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_total_2',
+        'balance_liabilities_current': '#ctl00_PlaceHolderMain_ucFSDetails_bs_liabilities_current_2',
+        'balance_liabilities_non_current': '#ctl00_PlaceHolderMain_ucFSDetails_bs_liabilities_longterm_2',
+        'balance_liabilities_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_liabilities_total_2',
+        'balance_funds_liabilities_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_liabilities_total_2'
     },
     'fy2': {
         'financial_period': '#ctl00_PlaceHolderMain_gvFinancialInformation > tbody > tr:nth-child(3) > td:nth-child(1)',
@@ -48,9 +63,9 @@ const layoutFinancialMapping = {
         'receipts_donation_cash_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_td_cash_1',
         'receipts_donation_cash_non_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_ntd_cash_1',
         'receipts_donation_cash_total': '#ctl00_PlaceHolderMain_ucFSDetails_income_total_cash_1',
-        'receipts_donation_inkind_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_td_kind_1',
-        'receipts_donation_inkind_non_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_ntd_kind_1',
-        'receipts_donation_inkind_total': '#ctl00_PlaceHolderMain_ucFSDetails_income_total_kind_1',
+        'receipts_donation_kind_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_td_kind_1',
+        'receipts_donation_kind_non_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_ntd_kind_1',
+        'receipts_donation_kind_total': '#ctl00_PlaceHolderMain_ucFSDetails_income_total_kind_1',
         'receipts_government_grants': '#ctl00_PlaceHolderMain_ucFSDetails_income_gov_grants_1',
         'receipts_investment_income': '#ctl00_PlaceHolderMain_ucFSDetails_income_investment_1',
         'receipts_programme_fees': '#ctl00_PlaceHolderMain_ucFSDetails_income_program_fee_1',
@@ -61,12 +76,27 @@ const layoutFinancialMapping = {
         'expenses_charitable_overseas': '#ctl00_PlaceHolderMain_ucFSDetails_expenses_cae_overseas_1',
         'expenses_charitable_total': '#ctl00_PlaceHolderMain_ucFSDetails_expenses_total_cape_1',
         'expenses_others_total': '#ctl00_PlaceHolderMain_ucFSDetails_expenses_other_1',
-        'other_donation_other_charities': '#ctl00_PlaceHolderMain_ucFSDetails_oi_dgs_reg_charity_1',
-        'other_no_of_employees': '#ctl00_PlaceHolderMain_ucFSDetails_oi_employee_no_1',
-        'other_total_employee_costs': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_employee_cost_1',
-        'other_fund_raising_efficiency_ratio': '#ctl00_PlaceHolderMain_ucFSDetails_oi_fr_efficiency_ratio_1',
-        'other_total_related_party_transactions': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_related_party_1',
-        'balance_assets_investments': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_investments_1'
+        'other_info_donation_other_charities': '#ctl00_PlaceHolderMain_ucFSDetails_oi_dgs_reg_charity_1',
+        'other_info_no_of_employees': '#ctl00_PlaceHolderMain_ucFSDetails_oi_employee_no_1',
+        'other_info_total_employee_costs': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_employee_cost_1',
+        'other_info_fund_raising_efficiency_ratio': '#ctl00_PlaceHolderMain_ucFSDetails_oi_fr_efficiency_ratio_1',
+        'other_info_total_related_party_transactions': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_related_party_1',
+        'balance_assets_land_building': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_land_building_1',
+        'balance_assets_other_tangible': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_other_tangible_1',
+        'balance_assets_investments': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_investments_1',
+        'balance_assets_inventories': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_inventories_1',
+        'balance_assets_accounts_receivables': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_accounts_receivables_1',
+        'balance_assets_cash_deposits': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_cash_deposits_1',
+        'balance_assets_other_assets': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_other_1',
+        'balance_assets_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_total_1',
+        'balance_funds_unrestricted': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_unrestricted_1',
+        'balance_funds_restricted': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_restricted_1',
+        'balance_funds_endowment': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_endowment_1',
+        'balance_funds_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_total_1',
+        'balance_liabilities_current': '#ctl00_PlaceHolderMain_ucFSDetails_bs_liabilities_current_1',
+        'balance_liabilities_non_current': '#ctl00_PlaceHolderMain_ucFSDetails_bs_liabilities_longterm_1',
+        'balance_liabilities_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_liabilities_total_1',
+        'balance_funds_liabilities_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_liabilities_total_1'
     },
     'fy3': {
         'financial_period': '#ctl00_PlaceHolderMain_gvFinancialInformation > tbody > tr:nth-child(4) > td:nth-child(1)',
@@ -76,9 +106,9 @@ const layoutFinancialMapping = {
         'receipts_donation_cash_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_td_cash_0',
         'receipts_donation_cash_non_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_ntd_cash_0',
         'receipts_donation_cash_total': '#ctl00_PlaceHolderMain_ucFSDetails_income_total_cash_0',
-        'receipts_donation_inkind_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_td_kind_0',
-        'receipts_donation_inkind_non_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_ntd_kind_0',
-        'receipts_donation_inkind_total': '#ctl00_PlaceHolderMain_ucFSDetails_income_total_kind_0',
+        'receipts_donation_kind_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_td_kind_0',
+        'receipts_donation_kind_non_tax_deductible': '#ctl00_PlaceHolderMain_ucFSDetails_income_ntd_kind_0',
+        'receipts_donation_kind_total': '#ctl00_PlaceHolderMain_ucFSDetails_income_total_kind_0',
         'receipts_government_grants': '#ctl00_PlaceHolderMain_ucFSDetails_income_gov_grants_0',
         'receipts_investment_income': '#ctl00_PlaceHolderMain_ucFSDetails_income_investment_0',
         'receipts_programme_fees': '#ctl00_PlaceHolderMain_ucFSDetails_income_program_fee_0',
@@ -89,12 +119,27 @@ const layoutFinancialMapping = {
         'expenses_charitable_overseas': '#ctl00_PlaceHolderMain_ucFSDetails_expenses_cae_overseas_0',
         'expenses_charitable_total': '#ctl00_PlaceHolderMain_ucFSDetails_expenses_total_cape_0',
         'expenses_others_total': '#ctl00_PlaceHolderMain_ucFSDetails_expenses_other_0',
-        'other_donation_other_charities': '#ctl00_PlaceHolderMain_ucFSDetails_oi_dgs_reg_charity_0',
-        'other_no_of_employees': '#ctl00_PlaceHolderMain_ucFSDetails_oi_employee_no_0',
-        'other_total_employee_costs': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_employee_cost_0',
-        'other_fund_raising_efficiency_ratio': '#ctl00_PlaceHolderMain_ucFSDetails_oi_fr_efficiency_ratio_0',
-        'other_total_related_party_transactions': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_related_party_0',
-        'balance_assets_investments': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_investments_0'
+        'other_info_donation_other_charities': '#ctl00_PlaceHolderMain_ucFSDetails_oi_dgs_reg_charity_0',
+        'other_info_no_of_employees': '#ctl00_PlaceHolderMain_ucFSDetails_oi_employee_no_0',
+        'other_info_total_employee_costs': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_employee_cost_0',
+        'other_info_fund_raising_efficiency_ratio': '#ctl00_PlaceHolderMain_ucFSDetails_oi_fr_efficiency_ratio_0',
+        'other_info_total_related_party_transactions': '#ctl00_PlaceHolderMain_ucFSDetails_oi_total_related_party_0',
+        'balance_assets_land_building': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_land_building_0',
+        'balance_assets_other_tangible': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_other_tangible_0',
+        'balance_assets_investments': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_investments_0',
+        'balance_assets_inventories': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_inventories_0',
+        'balance_assets_accounts_receivables': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_accounts_receivables_0',
+        'balance_assets_cash_deposits': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_cash_deposits_0',
+        'balance_assets_other_assets': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_other_0',
+        'balance_assets_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_assets_total_0',
+        'balance_funds_unrestricted': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_unrestricted_0',
+        'balance_funds_restricted': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_restricted_0',
+        'balance_funds_endowment': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_endowment_0',
+        'balance_funds_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_total_0',
+        'balance_liabilities_current': '#ctl00_PlaceHolderMain_ucFSDetails_bs_liabilities_current_0',
+        'balance_liabilities_non_current': '#ctl00_PlaceHolderMain_ucFSDetails_bs_liabilities_longterm_0',
+        'balance_liabilities_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_liabilities_total_0',
+        'balance_funds_liabilities_total': '#ctl00_PlaceHolderMain_ucFSDetails_bs_funds_liabilities_total_0'
     }
 };
 
@@ -111,10 +156,11 @@ const nightmare = new Nightmare({show: false});
 
 async function scrapeCharityFinancial(categoryId, primarySector, subSector, linkId, pageNo, itemNo) {
 
-    const max_attempts = 5;
-    let success = false;
+    const max_attempts = 10;
+    let retry = true;
+    let result = {};
 
-    for (let attempt_no = 1; attempt_no <= max_attempts || success; attempt_no++) {
+    for (let attempt_no = 1; attempt_no <= max_attempts && retry; attempt_no++) {
         console.log(`================================================`);
         console.log(`Processing financial information: category ${categoryId}, page ${pageNo}, item ${itemNo}`);
         console.log(`Primary sector ${primarySector}, sub sector ${subSector}`);
@@ -124,12 +170,6 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
 
         let targetItemLink = '';
 
-        let mainData = {
-            'category_id': categoryId,
-            'primary_sector': primarySector,
-            'sub_setor': subSector
-        };
-
         try {
             console.log(`Loading main page`);
             await nightmare
@@ -137,9 +177,9 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
                 .goto(START)
                 .wait('#ctl00_PlaceHolderMain_btnSearch')
                 .inject('js', 'extra/inject_link.js')
+                .wait('#art1')
                 .wait(linkId)
                 .click(linkId)
-                .wait(3000)
                 .inject('js', 'extra/inject.js')
                 .wait('#a11');
 
@@ -165,6 +205,12 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
                     return itemLink;
                 });
 
+            let mainData = {
+                'category_id': categoryId,
+                'primary_sector': primarySector,
+                'sub_setor': subSector
+            };
+
             console.log(`Acquiring profile information`);
             mainData = await nightmare
                 .goto(targetItemLink)
@@ -176,32 +222,31 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
                     return mainData;
                 }, layoutProfileMapping, mainData)
                 .then(mainData => {
-                    success = true;
                     console.log('Managed to get profile information');
                     console.log(mainData);
                     return mainData;
                 });
-        }
-        catch
-            (e) {
-            console.error(e);
-        }
-    }
 
-    let result = {};
-    if (success) {
-        try {
             let financial_information_exists = false;
+            let latest_financial_period = '';
 
             console.log('Checking whether we can access financial information or not...');
             await nightmare
                 .click('#ctl00_PlaceHolderMain_Menu1n1 > table > tbody > tr > td > a')
-                .wait(3000)
+                .wait(6000)
                 .evaluate(() => {
                     // check whether we can access financial information page
-                    let latest_financial_period = document.querySelector('#ctl00_PlaceHolderMain_gvFinancialInformation > tbody > tr:nth-child(2) > td:nth-child(1)').innerText;
+                    return document.querySelector('#ctl00_PlaceHolderMain_gvFinancialInformation > tbody > tr:nth-child(2) > td:nth-child(1)').innerText;
+                })
+                .then(data => {
+                    latest_financial_period = data;
                     console.log(`latest financial period: ${latest_financial_period}`);
                     financial_information_exists = true;
+                })
+                .catch(e => {
+                    console.log(`------------------------------------------------`);
+                    console.log(`No accessible financial information`);
+                    retry = false;
                 });
 
             if (financial_information_exists) {
@@ -233,24 +278,16 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
                         writeFileSync(`./data/detail/financial_${linkId}_${pageNo}_${itemNo}.csv`, csvData, {encoding: 'utf8'});
                         console.log(`------------------------------------------------`);
                         console.log(`Finish writing charity financial information`);
-                        console.log(`File: ./data/detail/profile_${linkId}_${pageNo}_${itemNo}.csv`);
+                        console.log(`File: ./data/detail/financial_${linkId}_${pageNo}_${itemNo}.csv`);
+                        retry = false;
                         return data;
                     });
-            } else {
-                console.log(`------------------------------------------------`);
-                console.log(`No accessible financial information`);
-                return {};
             }
 
         }
-        catch
-            (e) {
+        catch (e) {
             console.error(e);
         }
-    } else {
-        console.log(`------------------------------------------------`);
-        console.log(`Failed getting profile information`);
-        return {};
     }
 
     return result;

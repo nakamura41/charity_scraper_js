@@ -202,11 +202,11 @@ const nightmare = new Nightmare({show: false});
 
 async function scrapeCharityCompliance(categoryId, primarySector, subSector, linkId, pageNo, itemNo) {
 
-    const max_attempts = 5;
-    let success = false;
+    const max_attempts = 10;
+    let retry = true;
     let result = {};
 
-    for (let attempt_no = 1; attempt_no <= max_attempts || success; attempt_no++) {
+    for (let attempt_no = 1; attempt_no <= max_attempts && retry; attempt_no++) {
         console.log(`================================================`);
         console.log(`Processing code compliance: category ${categoryId}, page ${pageNo}, item ${itemNo}`);
         console.log(`Primary sector ${primarySector}, sub sector ${subSector}`);
@@ -222,9 +222,9 @@ async function scrapeCharityCompliance(categoryId, primarySector, subSector, lin
                 .goto(START)
                 .wait('#ctl00_PlaceHolderMain_btnSearch')
                 .inject('js', 'extra/inject_link.js')
+                .wait('#art1')
                 .wait(linkId)
                 .click(linkId)
-                .wait(3000)
                 .inject('js', 'extra/inject.js')
                 .wait('#a11');
 
@@ -310,7 +310,7 @@ async function scrapeCharityCompliance(categoryId, primarySector, subSector, lin
                         console.log(`------------------------------------------------`);
                         console.log(`Finish writing charity compliance information`);
                         console.log(`File: ./data/detail/compliance_${linkId}_${pageNo}_${itemNo}.csv`);
-                        success = true;
+                        retry = false;
                         return data;
                     });
 

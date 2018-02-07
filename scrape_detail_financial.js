@@ -173,10 +173,14 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
                     for (let item in layoutMapping) {
                         mainData[item] = document.querySelector(layoutMapping[item]).innerText;
                     }
+                    return mainData;
+                }, layoutProfileMapping, mainData)
+                .then(mainData => {
                     success = true;
                     console.log('Managed to get profile information');
+                    console.log(mainData);
                     return mainData;
-                }, layoutProfileMapping, mainData);
+                });
         }
         catch
             (e) {

@@ -165,7 +165,7 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
                     return itemLink;
                 });
 
-            console.log(`Acquiring main profile information`);
+            console.log(`Acquiring profile information`);
             mainData = await nightmare
                 .goto(targetItemLink)
                 .wait('#ctl00_PlaceHolderMain_lblAddress')
@@ -174,6 +174,7 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
                         mainData[item] = document.querySelector(layoutMapping[item]).innerText;
                     }
                     success = true;
+                    console.log('Managed to get profile information');
                     return mainData;
                 }, layoutProfileMapping, mainData);
         }
@@ -242,6 +243,10 @@ async function scrapeCharityFinancial(categoryId, primarySector, subSector, link
             (e) {
             console.error(e);
         }
+    } else {
+        console.log(`------------------------------------------------`);
+        console.log(`Failed getting profile information`);
+        return {};
     }
 
     return result;

@@ -1,4 +1,41 @@
 primary_sector,sub_sector,link_id,record_count
+Arts and Heritage,Historical & Cultural Conservation,#art1,26
+Arts and Heritage,Literary Arts,#art2,10
+Arts and Heritage,Music & Orchestras,#art3,30
+Arts and Heritage,"Professional, Contemporary & Ethnic Dance",#art4,19
+Arts and Heritage,Theatre & Dramatic Arts,#art5,44
+Arts and Heritage,Traditional Ethnic Performing Arts,#art6,20
+Arts and Heritage,Training & Education,#art7,27
+Arts and Heritage,Visual Arts,#art8,31
+Arts and Heritage,Others,#art9,18
+Community,South West,#com1,17
+Community,North West,#com2,19
+Community,Central,#com3,24
+Community,North East,#com4,18
+Community,South East,#com5,12
+Education,Local Educational Institutions/Funds,#edu1,40
+Education,Foreign Educational Institutions/Funds,#edu2,28
+Education,Foundations & Trusts,#edu3,38
+Education,Uniformed Groups,#edu4,6
+Education,Government-Aided Schools,#edu5,0
+Education,Independent Schools,#edu6,0
+Education,Others,#edu7,16
+Health,Cluster/Hospital Funds,#hea1,14
+Health,Community/Chronic Sick Hospital,#hea2,4
+Health,Day Rehabilitation Centre,#hea3,14
+Health,Diseases/Illnessess Support Group,#hea4,34
+Health,Home Care,#hea5,10
+Health,Hospice,#hea6,6
+Health,Hospital/Statutory Board,#hea7,2
+Health,Nursing Home,#hea8,18
+Health,Other Community-based Services,#hea9,15
+Health,Palliative Home Care,#hea10,5
+Health,Health Professional Group,#hea11,14
+Health,Renal Dialysis,#hea12,2
+Health,TCM Clinic,#hea13,11
+Health,Trust/Research Funds,#hea14,10
+Health,Others,#hea15,30
+Religious,Buddhism,#rel1,175
 Religious,Christianity,#rel2,625
 Religious,Hinduism,#rel3,39
 Religious,Islam,#rel4,12

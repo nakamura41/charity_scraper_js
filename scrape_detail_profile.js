@@ -145,7 +145,7 @@ async function scrapeCharityProfile(categoryId, primarySector, subSector, linkId
 }
 
 function main() {
-    let index = 37;
+    let index = 0;
     let jobs = [];
 
     inputData.forEach(charitiesCategory => {
